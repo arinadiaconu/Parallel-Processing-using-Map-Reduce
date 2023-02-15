@@ -1,0 +1,7 @@
+terminate called after throwing an instance of 'std::invalid_argument'
+  what():  stoi
+timeout: the monitored command dumped core
+Aborted
+real 0.10
+user 0.00
+sys 0.00

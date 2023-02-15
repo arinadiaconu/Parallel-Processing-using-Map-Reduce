@@ -1,0 +1,73 @@
+DIACONU ARINA-IOANA                     332CB
+
+                README - APD - TEMA1
+
+Implementare:
+
+                 - functia main() -
+
+    In programul principal se verifica daca numarul
+parametrilor primiti la rularea sa este cel asteptat si
+in caz afirmativ se initializeaza numarul de mapperi, de
+reduceri si numele fisierului de input. Datele din acest
+fisier, reprezentate de numele fisierelor ce trebuie
+procesate de mapperi sunt citite si retinute intr-o coada.
+    Numarul de threaduri create este calculat drept maximul
+dintre numarul de mapperi si reduceri, intrucat nu are sens
+crearea mai multor threaduri avand in vedere ca cele doua
+parti ale procesului de map-reduce nu se suprapun.
+    Structura in care mapperii vor computa rezultatele
+partiale este o matrice de seturi, implementata cu 
+tipurile de date vector si set din stl. Matricea are
+numarul de mapperi linii si numarul de reduceri coloane. Am
+ales sa folosesc set-uri pentru a retine direct valorile
+unice ale puterilor perfecte gasite.
+    Structura de date pe care o primeste ca argument
+functia de thread este alcatuita din matricea de seturi,
+id-ul fiecarui thread, numarul de mapperi, numarul de
+reduceri, coada cu fisierele de procesat, un mutex si o
+bariera. Aceasta structura este initializata si ii aloc
+memorie, respectiv ii initializez campurile pentru fiecare
+thread in parte. Pentru matricea de seturi este data adresa
+pentru ca fiecare mapper sa completeze in aceeasi matrice
+rezultatele sale. In acelasi scop trimit referintele la
+coada, mutex si bariera.
+    Dupa ce creez toate thread-urile le fac join pentru a
+ma asigura ca si-au terminat executia inainte de oprirea
+programului principal.
+
+                - functia map_reduce() -
+
+    Este functia care este apelata de fiecare thread in
+parte si care contine procesul de mapping si procesul de
+reducing, avand grija ca primul proces sa se termine
+inainte ca cel de-al doilea sa inceapa prin utilizarea
+barierei.
+    In procesul de mapping, thread-urile acceseaza pe rand
+cate un nume de fisier din coada cu ajutorul unui mutex.
+Pentru fisierul astfel obtinut, se citesc valorile pe rand,
+se verifica daca respectivul numar este putere perfecta si
+in caz afirmativ il retine in matricea de seturi. Mapperii
+isi termina executia atunci cand nu mai sunt fisiere de 
+procesat in coada.
+    Procesul de reducing se rezuma pentru fiecare reducer
+la a parcurge matricea de seturi pentru valoarea puterii
+pentru care calculeaza rezultatul si sa compuna din
+subset-urile parcurse set-ul final. Dupa parcurgerea 
+matricii reducer-ul va scrie rezultatul intr-un fisier de
+output.
+
+            - functia verify_perfect_power() -
+
+    Aceasta functie primeste un numar si un exponent si
+verifica daca respectivul numar este putere perfecta pentru
+respectivul exponent. Altfel spus, cauta un intreg "base"
+pentru care base^exponent = number.
+    Functia reprezinta, de fapt, o cautare binara a acestei
+baze a puterii in intervalul [1, numar/exponent].
+
+              - functia compute_number() -
+
+    Aceasta functie este echivalenta cu functia pow, 
+intrucat calculeaza base^exponent in mod iterativ.
+
